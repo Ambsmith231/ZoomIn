@@ -22,8 +22,8 @@
             >Shop Now</RouterLink>
             
 
-            <RouterLink to="/"class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white font-bold text-[11px] uppercase px-4 py-3 tracking-wider transition rounded-sm border border-gray-700"
-            >LogOut</RouterLink>
+            <!-- <RouterLink to="/"class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white font-bold text-[11px] uppercase px-4 py-3 tracking-wider transition rounded-sm border border-gray-700"
+            >LogOut</RouterLink> -->
           </div>
         </div>
       </section>
@@ -161,60 +161,90 @@
     </div>
   </template>
   
-  <script>
-  import { api } from '../api';
-  
-  export default {
-    name: 'UserDashboard',
-    props: {
-      user: {
-        type: Object,
-        required: true,
-        default: () => ({ name: 'Valued Client', email: 'client@example.com', phone: '231000000000', createdAt: new Date() })
-      }
-    },
-    data() {
-      return {
-        orders: [],
-        loadingOrders: false
-      };
-    },
-    async mounted() {
-      await this.fetchOrders();
-    },
-    methods: {
-      async fetchOrders() {
-        this.loadingOrders = true;
-        try {
-          // Fetch real SQLite orders for this user
-          this.orders = await api.getUserOrders(this.user.id);
-        } catch (err) {
-          console.warn("Could not load backend orders, using mock preview:", err);
-          // Fallback preview data if API is offline
-          this.orders = [
-            { id: 1042, date: new Date(), amount: 120.00, status: 'Paid' },
-            { id: 1038, date: new Date(Date.now() - 86400000 * 3), amount: 45.50, status: 'Paid' }
-          ];
-        } finally {
-          this.loadingOrders = false;
-        }
-      },
-      editPhone() {
-        const newPhone = prompt("Enter new default Mobile Money phone number:", this.user.phone);
-        if (newPhone && newPhone.trim() !== "") {
-          this.user.phone = newPhone.trim();
-          // Here you would call: await api.updateProfile({ phone: this.user.phone });
-          alert("Mobile Money phone number updated successfully!");
-        }
-      },
-      logout() {
-        this.$emit('logout');
-      },
-      formatDate(dateVal) {
-        if (!dateVal) return 'N/A';
-        const d = new Date(dateVal);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      }
+  <script setup>
+import { ref, onMounted } from "vue";
+import { api, auth } from "../api";
+
+const user = ref(
+  auth.getUser() || {
+    name: "",
+    email: "",
+    phone: "",
+    createdAt: new Date()
+  }
+);
+
+const orders = ref([]);
+const loadingOrders = ref(false);
+
+const fetchOrders = async () => {
+  loadingOrders.value = true;
+
+  try {
+    if (user.value?.id) {
+      orders.value = await api.getUserOrders(user.value.id);
     }
-  };
-  </script>
+  } catch (err) {
+    console.warn(
+      "Could not load backend orders, using mock preview:",
+      err
+    );
+
+    orders.value = [
+      {
+        id: 1042,
+        date: new Date(),
+        amount: 120.0,
+        status: "Paid"
+      },
+      {
+        id: 1038,
+        date: new Date(Date.now() - 86400000 * 3),
+        amount: 45.5,
+        status: "Paid"
+      }
+    ];
+  } finally {
+    loadingOrders.value = false;
+  }
+};
+
+const editPhone = async () => {
+  const newPhone = prompt(
+    "Enter new default Mobile Money phone number:",
+    user.value.phone
+  );
+
+  if (!newPhone || !newPhone.trim()) return;
+
+  user.value.phone = newPhone.trim();
+
+  // await api.updateProfile({
+  //   phone: user.value.phone
+  // });
+
+  localStorage.setItem("user", JSON.stringify(user.value));
+
+  alert("Mobile Money phone number updated successfully!");
+};
+
+const logout = () => {
+  auth.logout();
+
+  window.location.href = "/";
+};
+
+const formatDate = (dateVal) => {
+  if (!dateVal) return "N/A";
+
+  return new Date(dateVal).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+};
+
+onMounted(() => {
+  fetchOrders();
+});
+</script>
