@@ -70,9 +70,7 @@ exports.createProduct = (req, res) => {
 
 };
 
-// =========================
 // Get All Products
-// =========================
 exports.getProducts = (req, res) => {
 
     const products = db.prepare(`
@@ -89,9 +87,7 @@ exports.getProducts = (req, res) => {
 
 };
 
-// =========================
 // Get One Product
-// =========================
 exports.getProduct = (req, res) => {
 
     const product = db.prepare(`
@@ -136,9 +132,7 @@ exports.getProductById = (req, res) => {
 };
 
 
-// =========================
 // Archive Product
-// =========================
 exports.archiveProduct = (req, res) => {
 
     db.prepare(`

@@ -127,14 +127,56 @@
 
 
 <script setup>
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth.js'
 
-const router = useRouter()
-const authStore = useAuthStore()
+// new code
+
+// import { useRouter } from "vue-router";
+// import { useAuthStore } from "@/stores/counter.js";
+
+// const router = useRouter();
+// const authStore = useAuthStore();
+
+// const logout = () => {
+//   authStore.logout();
+//   router.replace("/");
+// };
+
+
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/counter.js";
+// import { useAuthStore } from "@/stores/counter.js";
+// import User from "./User.vue";
+
+const router = useRouter();
+const authStore = useAuthStore();
 
 const logout = () => {
-  authStore.logout()
-  router.replace('/')
-}
+  authStore.logout();
+  router.replace("/");
+};
+
+
+// import { computed } from "vue";
+// import { useRouter } from "vue-router";
+// import { auth } from "../api";
+
+// const router = useRouter();
+
+// const isLoggedIn = computed(() => auth.isLoggedIn());
+
+// const dashboardRoute = computed(() => {
+//   const user = auth.getUser();
+
+//   if (!user) return "/";
+
+//   return user.role === "admin"
+//     ? "/admin"
+//     : "/user";
+// });
+
+// const logout = () => {
+//   auth.logout();
+//   router.replace("/");
+//   // router.push("/");
+// };
 </script>
