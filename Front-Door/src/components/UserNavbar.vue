@@ -2,7 +2,9 @@
 import { auth } from "../api";
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth.js';
 
+const authStore = useAuthStore();
 const router = useRouter();
 const isDropdownOpen = ref(false);
 const user = ref({ name: '', email: 'user' });
@@ -41,9 +43,9 @@ const goToProfile = () => {
 // import { auth } from "../api";
 
 const logout = () => {
-  auth.logout();
-  router.replace("/");
-};
+  authStore.logout()
+  router.replace('/')
+}
 </script>
 
 <template>

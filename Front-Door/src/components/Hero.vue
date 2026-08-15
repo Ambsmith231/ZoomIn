@@ -45,8 +45,10 @@
             </div>
             <!-- Quick link to clear search or browse all -->
             <div class="mt-2 flex justify-between items-center text-[11px] text-gray-500">
-              <span>Try: <button type="button" @click="quickSearch('shirt')" class="underline hover:text-black">shirts</button>, <button type="button" @click="quickSearch('shoes')" class="underline hover:text-black">shoes</button></span>
-              <a href="#products" @click="quickSearch('')" class="font-bold hover:underline text-gray-800">View All Catalog &rarr;</a>
+              <span>Try:
+                <button type="button" @click="quickSearch('shirt')" class="underline hover:text-black">shirts</button>, 
+                <button type="button" @click="quickSearch('shoes')" class="underline hover:text-black">shoes</button></span>
+              <a href="#products" @click="quickSearch('')" class="font-bold hover:underline text-gray-800">View All Catalog</a>
             </div>
           </form>
   
@@ -55,10 +57,10 @@
         <!-- Right Column: Banner Image -->
         <div class="flex justify-center md:justify-end">
           <div class="relative max-w-md w-full">
-            <img 
-              src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80" 
-              alt="Brand New Collection" 
-              class="w-full h-auto object-cover rounded-sm shadow-sm"
+           <img
+           :src="images[currentImage]"
+            alt="Brand New Collection"
+            class="w-full h-auto object-cover rounded-sm shadow-sm"
             />
           </div>
         </div>
@@ -66,30 +68,60 @@
       </div>
     </section>
   </template>
-  
-  <script>
-  export default {
-    name: 'HeroSection',
-    data() {
-      return {
-        searchQuery: ''
-      };
-    },
-    methods: {
-      executeSearch() {
-        // 1. Emit the search term to App.vue
-        this.$emit('search', this.searchQuery);
-  
-        // 2. Smoothly scroll down to the product catalog
-        const productSection = document.getElementById('products');
-        if (productSection) {
-          productSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      },
-      quickSearch(term) {
-        this.searchQuery = term;
-        this.executeSearch();
-      }
-    }
-  };
-  </script>
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+
+// Search
+const searchQuery = ref('')
+
+const emit = defineEmits(['search'])
+
+const executeSearch = () => {
+  // Send the search term to the parent component
+  emit('search', searchQuery.value)
+
+  // Scroll to the product section
+  const productSection = document.getElementById('products')
+
+  if (productSection) {
+    productSection.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }
+}
+
+const quickSearch = (term) => {
+  searchQuery.value = term
+  executeSearch()
+}
+
+
+// Banner Images
+const images = Object.values(
+  import.meta.glob('@/assets/banners/*.{jpg,jpeg,png,webp}', {
+    eager: true,
+    import: 'default'
+  })
+)
+
+const currentImage = ref(0)
+
+let timer
+
+// Change banner every 3 seconds
+onMounted(() => {
+  if (images.length > 1) {
+    timer = setInterval(() => {
+      currentImage.value =
+        (currentImage.value + 1) % images.length
+    }, 3000)
+  }
+})
+
+// Stop timer when component is removed
+onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer)
+  }
+})
+</script>

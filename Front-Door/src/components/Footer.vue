@@ -10,7 +10,7 @@
             Buy
           </a>
           <p class="text-[11px] text-gray-400 leading-relaxed font-medium max-w-xs">
-            Mauris vitae ultricies leo integer malesuada tempor orci dapibus ultrices diam in arcu cursus euismod purus viverra.
+            EBuy is your one-stop online shop for the latest fashion, electronics, and lifestyle products. We are committed to providing quality products and exceptional customer service.
           </p>
           <div class="flex items-center space-x-3 text-gray-400 text-sm pt-1">
             <a href="#" class="hover:text-red-500 transition"><i class="fab fa-facebook-f"></i></a>

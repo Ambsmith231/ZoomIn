@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth.js';
 import { useRouter, useRoute } from 'vue-router';
 
+const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 
@@ -24,10 +26,14 @@ onMounted(() => {
   window.addEventListener('storage', loadSession);
 });
 
+// const logout = () => {
+//   localStorage.removeItem('user');
+//   router.push('/');
+// };
 const logout = () => {
-  localStorage.removeItem('user');
-  router.push('/');
-};
+  authStore.logout()
+  router.replace('/')
+}
 </script>
 
 <template>
