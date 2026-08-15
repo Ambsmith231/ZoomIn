@@ -5,14 +5,12 @@ const bcrypt = require("bcryptjs");
 // Create/Open database
 const db = new Database(path.join(__dirname, "../database.db"));
 
-console.log("✅ Connected to SQLite database");
+console.log(" Connected to SQLite database");
 
 // Enable foreign keys
 db.pragma("foreign_keys = ON");
 
-// ==============================
 // USERS TABLE
-// ==============================
 db.prepare(`
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,9 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
 )
 `).run();
 
-// ==============================
 // PRODUCTS TABLE
-// ==============================
 db.prepare(`
 CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,9 +38,7 @@ CREATE TABLE IF NOT EXISTS products (
 )
 `).run();
 
-// ==============================
 // ORDERS TABLE
-// ==============================
 db.prepare(`
 CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,34 +58,5 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY(productId) REFERENCES products(id) ON DELETE CASCADE
 )
 `).run();
-
-// ==============================
-// CREATE DEFAULT ADMIN
-// ==============================
-// const adminEmail = "admin@example.com";
-
-// const admin = db
-//     .prepare("SELECT * FROM users WHERE email = ?")
-//     .get(adminEmail);
-
-// if (!admin) {
-
-//     const hashedPassword = bcrypt.hashSync("Admin123!", 10);
-
-//     db.prepare(`
-//         INSERT INTO users
-//         (name, email, password, role)
-//         VALUES (?, ?, ?, ?)
-//     `).run(
-//         "System Administrator",
-//         adminEmail,
-//         hashedPassword,
-//         "admin"
-//     );
-
-//     console.log("✅ Default admin created");
-//     console.log("Email: admin@example.com");
-//     console.log("Password: admin1234");
-// }
 
 module.exports = db;

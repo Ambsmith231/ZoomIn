@@ -1,8 +1,6 @@
 const db = require("../config/db");
 
-// =========================
 // Create Product
-// =========================
 exports.createProduct = (req, res) => {
 
     try {

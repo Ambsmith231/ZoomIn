@@ -6,10 +6,9 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
     console.log(`
------------------------------------>>>
- E-Buy E-Commerce Backend Started
+                    --------------------
+ E-Buy Backend has started successfully!
  Running on: http://localhost:${PORT}
- Environment: ${process.env.NODE_ENV}
- ------------------------------------>>>>
+ --------------
 `);
 });
